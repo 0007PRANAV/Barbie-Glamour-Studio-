@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Barbie Glamour Studio - Premium Edition</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Playfair+Display:ital,wght@0,600;1,500&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --barbie-pink: #e0218a;
+            --hot-pink: #ff1493;
+            --soft-pink: #ffb6c1;
+            --blush-pink: #fff0f5;
+            --rose-gold: #b76e79;
+            --gold: #ffd700;
+            --dark-text: #4a2c3a;
+            --white: #ffffff;
+            --shadow-sm: 0 4px 12px rgba(224, 33, 138, 0.08);
+            --shadow-md: 0 12px 30px rgba(224, 33, 138, 0.15);
+            --shadow-lg: 0 20px 45px rgba(74, 44, 58, 0.2);
+            --transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-full: 50px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ffe4e1 0%, #fff0f5 100%);
+            color: var(--dark-text);
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 0;
+        }
+
+        /* Game Frame Wrapper - Responsive Framework Fixes */
+        #game-frame {
+            width: 100%;
+            max-width: 480px;
+            height: 100vh;
+            height: -webkit-fill-available;
+            background: var(--white);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-lg);
+            border: none;
+        }
+
+        /* Desktop Container Mock Up Scaling Layer */
+        @media (min-height: 900px) and (min-width: 500px) {
+            #game-frame {
+                height: 880px;
+                border-radius: 36px;
+                border: 6px solid var(--white);
+            }
+            body {
+                padding: 10px;
+                overflow: hidden;
+            }
+        }
+
+        /* Screen Architecture */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            opacity: 0;
+            transform: scale(1.01);
+            transition: var(--transition);
+            z-index: 1;
+            background: var(--blush-pink);
+        }
+
+        .screen.active {
+            display: flex;
+            opacity: 1;
+            transform: scale(1);
+            z-index: 2;
+        }
+
+        .studio-bg {
+            background: radial-gradient(circle at 50% 30%, #ffc0cb 0%, #ff69b4 100%);
+        }
+
+        /* Typography & Buttons */
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+        }
+
+        .btn-premium {
+            background: linear-gradient(135deg, var(--hot-pink) 0%, var(--barbie-pink) 100%);
+            color: var(--white);
+            border: none;
+            padding: 14px 28px;
+            border-radius: var(--radius-full);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(224, 33, 138, 0.25);
+            transition: var(--transition);
+            text-transform: uppercase;
+            outline: none;
+            text-align: center;
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(224, 33, 138, 0.4);
+            filter: brightness(1.05);
+        }
+
+        .btn-premium:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--barbie-pink);
+            border: 2px solid var(--barbie-pink);
+            padding: 10px 22px;
+            border-radius: var(--radius-full);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-secondary:hover {
+            background: var(--blush-pink);
+            transform: translateY(-1px);
+        }
+
+        /* Header Navigation Components */
+        .app-header {
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background: var(--white);
+            border-bottom: 1px solid #f2e2e9;
+            z-index: 10;
+            flex-shrink: 0;
+        }
+
+        .app-header.studio-variant {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .app-header h2 {
+            font-size: 18px;
+            color: var(--dark-text);
+            letter-spacing: 0.5px;
+        }
+
+        .app-header.studio-variant h2 {
+            color: var(--white);
+            text-shadow: 0 2px 4px rgba(74,44,58,0.15);
+        }
+
+        .btn-back {
+            width: 36px;
+            height: 36px;
+            background: var(--white);
+            border: none;
+            border-radius: 50%;
+            color: var(--barbie-pink);
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        /* Onboarding Screen */
+        #scr-onboarding {
+            background: linear-gradient(to bottom, #fff5f7 0%, #ffe4ec 100%);
+            padding: 40px 30px;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            overflow-y: auto;
+        }
+
+        .brand-container {
+            text-align: center;
+        }
+
+        .brand-logo {
+            font-family: 'Cinzel', serif;
+            font-size: 36px;
+            color: var(--barbie-pink);
+            letter-spacing: 6px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .brand-subtitle {
+            font-size: 12px;
+            color: var(--rose-gold);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .form-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 30px 24px;
+            width: 100%;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-group label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--rose-gold);
+            letter-spacing: 0.5px;
+        }
+
+        .input-group input {
+            padding: 12px 18px;
+            border: 2px solid #f2e2e9;
+            border-radius: var(--radius-full);
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+            color: var(--dark-text);
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .input-group input:focus {
+            border-color: var(--barbie-pink);
+            box-shadow: 0 0 0 3px rgba(224, 33, 138, 0.1);
+        }
+
+        /* Home Screen */
+        .home-banner {
+            width: 100%;
+            height: 35%;
+            min-height: 240px;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 4px solid var(--white);
+            flex-shrink: 0;
+        }
+
+        .home-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+
+        .home-banner-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(to top, var(--blush-pink) 0%, rgba(255,240,245,0) 100%);
+        }
+
+        .home-welcome {
+            padding: 12px 24px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .home-welcome h1 {
+            color: var(--barbie-pink);
+            font-size: 26px;
+        }
+
+        .home-welcome p {
+            font-size: 11px;
+            color: var(--rose-gold);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .home-menu {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 12px;
+            padding: 10px 24px;
+            overflow-y: auto;
+        }
+
+        .menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--white);
+            border: none;
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            text-align: left;
+            flex-shrink: 0;
+        }
+
+        .menu-btn:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-md);
+            background: linear-gradient(to right, var(--white) 90%, #fff0f5 100%);
+        }
+
+        .menu-btn-icon {
+            font-size: 24px;
+            background: var(--blush-pink);
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            color: var(--barbie-pink);
+            flex-shrink: 0;
+        }
+
+        .menu-btn-text h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        .menu-btn-text p {
+            font-size: 11px;
+            color: var(--rose-gold);
+        }
+
+        .home-footer {
+            display: flex;
+            justify-content: center;
+            padding: 12px 0;
+            flex-shrink: 0;
+        }
+
+        .btn-settings-toggle {
+            background: var(--white);
+            border: 1px solid #f2e2e9;
+            color: var(--rose-gold);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 16px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Doll Presentation Engine Structure */
+        .stage-area {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 10px;
+            min-height: 0;
+        }
+
+        .doll-container {
+            width: 200px;
+            height: 440px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        /* Short mobile screen viewport protection auto-scaling */
+        @media (max-height: 740px) {
+            .doll-container {
+                transform: scale(0.8);
+                transform-origin: center center;
+            }
+        }
+
+        /* The Doll Figure Stack Layering Blueprint */
+        .doll-body {
+            width: 55px;
+            height: 340px;
+            background: #ffe3d1;
+            border-radius: 30px;
+            position: absolute;
+            top: 65px;
+            z-index: 5;
+            box-shadow: 0 10px 24px rgba(74,44,58,0.12);
+        }
+
+        .doll-head {
+            width: 48px;
+            height: 54px;
+            background: #ffe3d1;
+            border-radius: 24px 24px 26px 26px;
+            position: absolute;
+            top: 22px;
+            z-index: 6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Facial Features Components */
+        .doll-face-features {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .doll-eyes {
+            position: absolute;
+            top: 22px;
+            left: 8px;
+            right: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .doll-eye {
+            width: 8px;
+            height: 7px;
+            background: #257bc4;
+            border-radius: 50%;
+            border-top: 1.5px solid #222;
+            position: relative;
+        }
+
+        .doll-eye::after {
+            content: '';
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+        }
+
+        .makeup-eyeshadow {
+            position: absolute;
+            top: 18px;
+            left: 6px;
+            right: 6px;
+            height: 6px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            z-index: 7;
+        }
+
+        .shadow-element {
+            width: 11px;
+            height: 4px;
+            border-radius: 50% 50% 0 0;
+            background: transparent;
+            filter: blur(1px);
+            transition: var(--transition);
+        }
+
+        .makeup-blush {
+            position: absolute;
+            top: 28px;
+            left: 4px;
+            right: 4px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            z-index: 7;
+        }
+
+        .blush-element {
+            width: 10px;
+            height: 7px;
+            border-radius: 50%;
+            background: transparent;
+            filter: blur(1.5px);
+            transition: var(--transition);
+        }
+
+        .doll-lips {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 14px;
+            height: 6px;
+            background: #ff6ea7;
+            border-radius: 2px 2px 5px 5px;
+            transition: var(--transition);
+        }
+
+        /* Hair Layers */
+        .layer-hair-back {
+            position: absolute;
+            top: 12px;
+            width: 90px;
+            height: 160px;
+            background: #f7d358;
+            border-radius: 36px 36px 20px 20px;
+            z-index: 3;
+            transition: var(--transition);
+        }
+
+        .layer-hair-front {
+            position: absolute;
+            top: 12px;
+            width: 86px;
+            height: 48px;
+            background: #ffe366;
+            border-radius: 30px 30px 10px 10px;
+            z-index: 8;
+            transition: var(--transition);
+        }
+
+        /* Clothing Composites Layout Engines */
+        .layer-apparel {
+            position: absolute;
+            top: 80px;
+            width: 76px;
+            height: 220px;
+            z-index: 10;
+            transition: var(--transition);
+            background-size: cover;
+            background-position: center;
+        }
+
+        .layer-shoes {
+            position: absolute;
+            bottom: 30px;
+            width: 66px;
+            height: 18px;
+            z-index: 11;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 4px;
+        }
+
+        .shoe-unit {
+            width: 18px;
+            height: 14px;
+            background: transparent;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        /* Dedicated Micro-Targeted Accessory Placement Systems */
+        .layer-acc-tiara { position: absolute; top: 2px; width: 60px; height: 24px; z-index: 20; text-align: center; font-size: 20px; line-height: 1; }
+        .layer-acc-earrings { position: absolute; top: 36px; left: -2px; right: -2px; display: flex; justify-content: space-between; z-index: 21; font-size: 11px; pointer-events: none; }
+        .layer-acc-necklace { position: absolute; top: 70px; width: 40px; height: 15px; z-index: 22; text-align: center; font-size: 14px; line-height: 1; }
+        .layer-acc-bracelet { position: absolute; top: 160px; right: -8px; z-index: 23; font-size: 11px; }
+        .layer-acc-bow { position: absolute; top: 15px; right: -10px; z-index: 24; font-size: 16px; }
+        .layer-acc-sunglasses { position: absolute; top: 18px; width: 42px; height: 16px; z-index: 25; text-align: center; font-size: 16px; line-height: 1; }
+        .layer-acc-handbag { position: absolute; bottom: 120px; left: -32px; z-index: 26; font-size: 28px; transition: var(--transition); }
+
+        /* Customizable Control Drawers - Optimized Flex Constraints */
+        .drawer-studio {
+            height: auto;
+            min-height: 290px;
+            max-height: 40vh;
+            background: var(--white);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            box-shadow: 0 -10px 30px rgba(74,44,58,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 15;
+            flex-shrink: 0;
+        }
+
+        .drawer-navigation {
+            display: flex;
+            background: #faf1f5;
+            border-bottom: 1px solid #f2e2e9;
+            overflow-x: auto;
+            scrollbar-width: none;
+            flex-shrink: 0;
+        }
+        .drawer-navigation::-webkit-scrollbar { display: none; }
+
+        .drawer-tab {
+            padding: 14px 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--rose-gold);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+        }
+
+        .drawer-tab.active {
+            color: var(--barbie-pink);
+            border-bottom-color: var(--barbie-pink);
+            background: var(--white);
+        }
+
+        .drawer-grid-view {
+            flex: 1;
+            padding: 14px;
+            overflow-x: auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--white);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .item-node-card {
+            min-width: 82px;
+            height: 100px;
+            background: var(--blush-pink);
+            border: 2px solid transparent;
+            border-radius: var(--radius-md);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 6px;
+            flex-shrink: 0;
+        }
+
+        .item-node-card.selected {
+            border-color: var(--barbie-pink);
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .item-node-thumb {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .item-node-card span {
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--dark-text);
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+        .drawer-actions-bar {
+            padding: 12px 20px;
+            border-top: 1px solid #f9ebf0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fffcfd;
+            flex-shrink: 0;
+        }
+
+        /* 33 Slot Grid Engine Architecture */
+        .inventory-layout-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 14px;
+            overflow-y: auto;
+            flex: 1;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .inventory-layout-slot {
+            background: #fffcfd;
+            border: 2px dashed #ebd3de;
+            border-radius: var(--radius-md);
+            height: 135px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 4px;
+        }
+
+        .inventory-layout-slot.occupied {
+            border-style: solid;
+            border-color: #f2e0e8;
+            background: var(--white);
+        }
+
+        .slot-thumbnail-wrapper {
+            width: 100%;
+            height: 80px;
+            background: radial-gradient(#fffbfc, #ffeef4);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slot-title-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-top: 5px;
+            text-align: center;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .slot-status-label {
+            font-size: 8px;
+            color: var(--rose-gold);
+            text-transform: uppercase;
+        }
+
+        /* Selection Lists Layout Viewports */
+        .list-selection-container {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .list-selection-row {
+            background: var(--white);
+            border: 2px solid #f2e2e9;
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+
+        /* Vault Gallery Modules */
+        .vault-navigation-tabs {
+            display: flex;
+            background: var(--white);
+            border-bottom: 1px solid #f2e2e9;
+            padding: 4px;
+            flex-shrink: 0;
+        }
+
+        .vault-tab-item {
+            flex: 1;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--rose-gold);
+            cursor: pointer;
+            border-radius: 10px;
+            transition: var(--transition);
+            text-transform: uppercase;
+        }
+
+        .vault-tab-item.active {
+            background: var(--blush-pink);
+            color: var(--barbie-pink);
+        }
+
+        .vault-scrollable-body {
+            flex: 1;
+            padding: 14px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .vault-gallery-pane {
+            display: none;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .vault-gallery-pane.active {
+            display: grid;
+        }
+
+        .gallery-display-card {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: 10px;
+            border: 1px solid #f5e2ea;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .gallery-card-preview {
+            width: 100%;
+            height: 140px;
+            background: radial-gradient(#fff0f6, #ffe4e8);
+            border-radius: 14px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .gallery-card-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--dark-text);
+            text-align: center;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .gallery-card-meta { font-size: 9px; color: var(--rose-gold); text-align: center; }
+        .gallery-card-actions { display: flex; gap: 4px; width: 100%; margin-top: 8px; }
+
+        .gallery-btn-action {
+            flex: 1;
+            padding: 6px 0;
+            font-size: 9px;
+            font-weight: 600;
+            border: 1px solid #f2e2e9;
+            background: #fffcfd;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--dark-text);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .empty-gallery-block { grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--rose-gold); }
+        .empty-gallery-block icon { font-size: 40px; display: block; margin-bottom: 10px; opacity: 0.5; }
+
+        /* Mini Scale Render Engine Blueprint */
+        .micro-avatar-view {
+            width: 80px;
+            height: 160px;
+            position: relative;
+            transform: scale(0.45);
+        }
+
+        /* Modals & Dialog Overlays */
+        .overlay-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(74, 44, 58, 0.4);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 100;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .overlay-modal.active { display: flex; opacity: 1; }
+
+        .modal-body-container {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(15px);
+            transition: var(--transition);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .overlay-modal.active .modal-body-container { transform: translateY(0); }
+        .modal-body-container h3 { color: var(--barbie-pink); font-size: 20px; margin-bottom: 6px; text-align: center; }
+        .modal-body-container p { font-size: 12px; color: var(--rose-gold); text-align: center; margin-bottom: 16px; }
+        .modal-stack { display: flex; flex-direction: column; gap: 8px; }
+        .btn-destructive { background: #fff3f6 !important; color: #d6244e !important; border: 1px solid #fcced7 !important; }
+    </style>
+</head>
+<body>
+
+<div id="game-frame">
+
+    <div id="scr-onboarding" class="screen">
+        <div class="brand-container">
+            <div class="brand-logo">BARBIE</div>
+            <div class="brand-subtitle">Glamour Studio</div>
+        </div>
+        <div class="form-card">
+            <h2 style="font-size: 20px; text-align: center; color: var(--dark-text);">Welcome Stylist</h2>
+            <div class="input-group">
+                <label for="onboard-player">Your Stylist Name</label>
+                <input type="text" id="onboard-player" placeholder="Enter name..." autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label for="onboard-doll">Your Barbie's Name</label>
+                <input type="text" id="onboard-doll" placeholder="Name your doll..." autocomplete="off">
+            </div>
+            <button class="btn-premium" id="btn-submit-onboard" style="margin-top: 6px;">Begin Design</button>
+        </div>
+    </div>
+
+    <div id="scr-home" class="screen">
+        <div class="home-banner">
+            <img src="https://m.media-amazon.com/images/M/MV5BZjQzZjYwNjMtMTZkYi00ZmYzLWI1NjAtNzkxMTlmYzYwNzUwXkEyXkFqcGc@._V1_.jpg" alt="Barbie Background Canvas Banner">
+            <div class="home-banner-overlay"></div>
+        </div>
+        <div class="home-welcome">
+            <h1 id="lbl-home-title">Barbie Studio</h1>
+            <p id="lbl-home-sub">STYLIST ACCESS GRANTED</p>
+        </div>
+        <div class="home-menu">
+            <button class="menu-btn" id="btn-route-dress">
+                <div class="menu-btn-icon">👗</div>
+                <div class="menu-btn-text">
+                    <h3>Dressing Mode</h3>
+                    <p>Configure clothes and custom layered sets</p>
+                </div>
+            </button>
+            <button class="menu-btn" id="btn-route-makeup">
+                <div class="menu-btn-icon">💄</div>
+                <div class="menu-btn-text">
+                    <h3>Makeup Mode</h3>
+                    <p>Load blueprints & customize facial styling</p>
+                </div>
+            </button>
+            <button class="menu-btn" id="btn-route-collection">
+                <div class="menu-btn-icon">💝</div>
+                <div class="menu-btn-text">
+                    <h3>My Dolls</h3>
+                    <p>Browse catalog arrays and configure layouts</p>
+                </div>
+            </button>
+        </div>
+        <div class="home-footer">
+            <button class="btn-settings-toggle" id="btn-open-settings">⚙️</button>
+        </div>
+    </div>
+
+    <div id="scr-inventory-manager" class="screen">
+        <div class="app-header">
+            <button class="btn-back go-home">◁</button>
+            <h2>Select Inventory Slot</h2>
+            <div style="width: 36px;"></div>
+        </div>
+        <div style="text-align: center; padding: 10px 14px 4px; font-size: 11px; color: var(--rose-gold); font-weight: 500;">
+            Select one of the 33 system storage allocations:
+        </div>
+        <div class="inventory-layout-grid" id="container-inventory-slots"></div>
+    </div>
+
+    <div id="scr-makeup-preload" class="screen">
+        <div class="app-header">
+            <button class="btn-back go-home">◁</button>
+            <h2>Select Base Model</h2>
+            <div style="width: 36px;"></div>
+        </div>
+        <div style="text-align: center; padding: 12px 16px; font-size: 11px; color: var(--rose-gold);">
+            Load an active style configuration layer blueprint from your dressing cache:
+        </div>
+        <div class="list-selection-container" id="container-makeup-loadable-rows"></div>
+    </div>
+
+    <div id="scr-dressing-studio" class="screen studio-bg">
+        <div class="app-header studio-variant">
+            <button class="btn-back" id="btn-back-from-dress">◁</button>
+            <h2 id="lbl-dress-header-title">Design Studio</h2>
+            <div style="width: 36px;"></div>
+        </div>
+        <div class="stage-area">
+            <div class="doll-container">
+                <div class="layer-hair-back" id="dr-layer-hair-back"></div>
+                <div class="doll-body">
+                    <div class="doll-head">
+                        <div class="doll-face-features">
+                            <div class="doll-eyes"><div class="doll-eye"></div><div class="doll-eye"></div></div>
+                            <div class="doll-lips" id="dr-layer-lips"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layer-hair-front" id="dr-layer-hair-front"></div>
+                <div class="layer-apparel" id="dr-layer-apparel"></div>
+                <div class="layer-shoes">
+                    <div class="shoe-unit" id="dr-layer-shoe-l"></div>
+                    <div class="shoe-unit" id="dr-layer-shoe-r"></div>
+                </div>
+                <div class="layer-acc-tiara" id="dr-layer-acc-tiara"></div>
+                <div class="layer-acc-earrings" id="dr-layer-acc-earrings"><span></span><span></span></div>
+                <div class="layer-acc-necklace" id="dr-layer-acc-necklace"></div>
+                <div class="layer-acc-bracelet" id="dr-layer-acc-bracelet"></div>
+                <div class="layer-acc-bow" id="dr-layer-acc-bow"></div>
+                <div class="layer-acc-sunglasses" id="dr-layer-acc-sunglasses"></div>
+                <div class="layer-acc-handbag" id="dr-layer-acc-handbag"></div>
+            </div>
+        </div>
+        <div class="drawer-studio">
+            <div class="drawer-navigation" id="tabs-dress-drawer">
+                <div class="drawer-tab active" data-cat="dresses">Dresses</div>
+                <div class="drawer-tab" data-cat="tops">Tops</div>
+                <div class="drawer-tab" data-cat="skirts">Skirts</div>
+                <div class="drawer-tab" data-cat="hair">Hair Profiles</div>
+                <div class="drawer-tab" data-cat="shoes">Shoes</div>
+                <div class="drawer-tab" data-cat="accessories">Jewelry & Acc</div>
+            </div>
+            <div class="drawer-grid-view" id="content-dress-drawer"></div>
+            <div class="drawer-actions-bar">
+                <span style="font-size: 11px; color: var(--rose-gold); font-weight: 500;">Dressing Active</span>
+                <button class="btn-secondary" id="btn-save-outfit-workflow">Save Outfit</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="scr-makeup-studio" class="screen studio-bg">
+        <div class="app-header studio-variant">
+            <button class="btn-back" id="btn-back-from-makeup">◁</button>
+            <h2 id="lbl-makeup-header-title">Glam Studio</h2>
+            <div style="width: 36px;"></div>
+        </div>
+        <div class="stage-area">
+            <div class="doll-container">
+                <div class="layer-hair-back" id="mk-layer-hair-back"></div>
+                <div class="doll-body">
+                    <div class="doll-head">
+                        <div class="doll-face-features">
+                            <div class="makeup-eyeshadow"><div class="shadow-element" id="mk-sh-l"></div><div class="shadow-element" id="mk-sh-r"></div></div>
+                            <div class="doll-eyes"><div class="doll-eye"></div><div class="doll-eye"></div></div>
+                            <div class="makeup-blush"><div class="blush-element" id="mk-bl-l"></div><div class="blush-element" id="mk-bl-r"></div></div>
+                            <div class="doll-lips" id="mk-layer-lips"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layer-hair-front" id="mk-layer-hair-front"></div>
+                <div class="layer-apparel" id="mk-layer-apparel"></div>
+                <div class="layer-shoes">
+                    <div class="shoe-unit" id="mk-layer-shoe-l"></div>
+                    <div class="shoe-unit" id="mk-layer-shoe-r"></div>
+                </div>
+                <div class="layer-acc-tiara" id="mk-layer-acc-tiara"></div>
+                <div class="layer-acc-earrings" id="mk-layer-acc-earrings"><span></span><span></span></div>
+                <div class="layer-acc-necklace" id="mk-layer-acc-necklace"></div>
+                <div class="layer-acc-bracelet" id="mk-layer-acc-bracelet"></div>
+                <div class="layer-acc-bow" id="mk-layer-acc-bow"></div>
+                <div class="layer-acc-sunglasses" id="mk-layer-acc-sunglasses"></div>
+                <div class="layer-acc-handbag" id="mk-layer-acc-handbag"></div>
+            </div>
+        </div>
+        <div class="drawer-studio">
+            <div class="drawer-navigation" id="tabs-makeup-drawer">
+                <div class="drawer-tab active" data-cat="lipstick">Lipstick</div>
+                <div class="drawer-tab" data-cat="eyeshadow">Eyeshadow</div>
+                <div class="drawer-tab" data-cat="blush">Blush</div>
+                <div class="drawer-tab" data-cat="cosmeticAcc">Cosmetic Acc</div>
+            </div>
+            <div class="drawer-grid-view" id="content-makeup-drawer"></div>
+            <div class="drawer-actions-bar">
+                <span style="font-size: 11px; color: var(--rose-gold); font-weight: 500;">Cosmetics Active</span>
+                <button class="btn-secondary" id="btn-save-makeup-workflow">Complete Glam</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="scr-collection-vault" class="screen">
+        <div class="app-header">
+            <button class="btn-back go-home">◁</button>
+            <h2>My Dolls Vault</h2>
+            <div style="width: 36px;"></div>
+        </div>
+        <div class="vault-navigation-tabs">
+            <div class="vault-tab-item active" data-pane="pane-dressing">Dressing</div>
+            <div class="vault-tab-item" data-pane="pane-makeup">Makeup</div>
+            <div class="vault-tab-item" data-pane="pane-final">My Dolls</div>
+        </div>
+        <div class="vault-scrollable-body">
+            <div class="vault-gallery-pane active" id="pane-dressing"></div>
+            <div class="vault-gallery-pane" id="pane-makeup"></div>
+            <div class="vault-gallery-pane" id="pane-final"></div>
+        </div>
+    </div>
+
+    <div class="overlay-modal" id="mdl-naming-dialog">
+        <div class="modal-body-container">
+            <h3 id="lbl-naming-dialog-title">Save Identity</h3>
+            <p>Assign a specialized tracking name to tag this styling profile within system records.</p>
+            <div class="input-group" style="margin-bottom: 16px;">
+                <label for="txt-dialog-save-name">Look Signature Name</label>
+                <input type="text" id="txt-dialog-save-name" placeholder="Name your creation..." autocomplete="off">
+            </div>
+            <div class="modal-stack">
+                <button class="btn-premium" id="btn-confirm-save-action">Commit Layout</button>
+                <button class="btn-secondary" id="btn-cancel-naming-modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay-modal" id="mdl-makeup-routing">
+        <div class="modal-body-container">
+            <h3>Complete Masterpiece</h3>
+            <p>Determine where to index this customized transformation profile data layout:</p>
+            <div class="modal-stack">
+                <button class="btn-premium" id="btn-save-target-makeup">1). Save to Makeup Section Only</button>
+                <button class="btn-premium" id="btn-save-target-both" style="background: linear-gradient(135deg, #b030b0 0%, #800080 100%); box-shadow: 0 4px 14px rgba(128,0,128,0.25);">2). Save to Both Makeup & My Dolls</button>
+                <button class="btn-secondary" id="btn-close-makeup-routing">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay-modal" id="mdl-settings-panel">
+        <div class="modal-body-container">
+            <h3>Studio Configurations</h3>
+            <p style="margin-bottom: 12px;">Adjust identity tags or reset locally indexed application frames.</p>
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+                <div class="input-group">
+                    <label for="txt-settings-player">Stylist Name</label>
+                    <input type="text" id="txt-settings-player" autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <label for="txt-settings-doll">Global Barbie Name</label>
+                    <input type="text" id="txt-settings-doll" autocomplete="off">
+                </div>
+            </div>
+            <div class="modal-stack">
+                <button class="btn-premium" id="btn-settings-apply">Apply Changes</button>
+                <button class="btn-premium btn-destructive" id="btn-settings-factory-wipe">Reset All Data</button>
+                <button class="btn-secondary" id="btn-close-settings-modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    /**
+     * Barbie System Application Architecture Engine Blueprint
+     */
+    const GameApp = {
+        Assets: {
+            dresses: [
+                { id: 'dr-none', name: 'Separate Items Layout', color: 'transparent', border: '0' },
+                { id: 'dr-princess', name: 'Royal Tulle Pink', color: 'linear-gradient(to bottom, #ff66b2, #ff007f)', border: '24px 24px 10px 10px' },
+                { id: 'dr-ocean', name: 'Mermaid Coral Aqua', color: 'linear-gradient(to bottom, #00ecc6, #008fa1)', border: '16px 16px 40px 40px' },
+                { id: 'dr-glam', name: 'Starlight Magenta', color: 'linear-gradient(to bottom, #da70d6, #8a2be2)', border: '40px 40px 0 0' },
+                { id: 'dr-sunset', name: 'Velvet Flare Rose', color: 'linear-gradient(to bottom, #ff8e53, #ff2e93)', border: '12px 12px 45px 45px' },
+                { id: 'dr-sunshine', name: 'Gilded Ballgown', color: 'linear-gradient(to bottom, #ffee55, #cc9900)', border: '30px 30px 15px 15px' }
+            ],
+            tops: [
+                { id: 'tp-none', name: 'Empty Top Layout', color: 'transparent', border: '0' },
+                { id: 'tp-corset', name: 'Blush Satin Corset', color: '#ff69b4', border: '0 0 8px 8px' },
+                { id: 'tp-lace', name: 'Seafoam Silk Frill', color: '#e0f7fa', border: '12px 12px 0 0' },
+                { id: 'tp-halter', name: 'Gilded Golden Crop', color: '#ffd700', border: '6px 6px 0 0' }
+            ],
+            skirts: [
+                { id: 'sk-none', name: 'Empty Lower Layout', color: 'transparent', border: '0' },
+                { id: 'sk-tulle', name: 'Orchid Tier Tulle', color: '#ffb6c1', border: '0 0 35px 35px' },
+                { id: 'sk-wrap', name: 'Lagoon Sarong Wrap', color: '#20b2aa', border: '0 0 20px 20px' },
+                { id: 'sk-star', name: 'Twilight Velvet Pencil', color: '#ba55d3', border: '0 0 45px 45px' }
+            ],
+            hair: [
+                { id: 'hr-blonde', name: 'Classic Golden Blonde', back: '#f5d042', front: '#fff176' },
+                { id: 'hr-pink', name: 'Orchid Pastel Pink', back: '#ff66b2', front: '#ffb3d9' },
+                { id: 'hr-brunette', name: 'Rich Espresso Brown', back: '#4a3321', front: '#6b4c35' },
+                { id: 'hr-platinum', name: 'Refined Pearl White', back: '#e0e0e0', front: '#ffffff' }
+            ],
+            shoes: [
+                { id: 'sh-none', name: 'Barefoot Default', color: 'transparent' },
+                { id: 'sh-pink', name: 'Glamour Rose Pumps', color: '#ff1493' },
+                { id: 'sh-aqua', name: 'Crystal Glass Heels', color: 'rgba(0,230,240,0.8)' },
+                { id: 'sh-gold', name: 'Gilded Platform Wedges', color: '#ffd700' }
+            ],
+            accessories: [
+                { id: 'ac-none', name: 'No Custom Acc', type: 'none', glyph: '' },
+                { id: 'ac-tiara', name: 'Princess Diamond Tiara', type: 'tiara', glyph: '👑' },
+                { id: 'ac-necklace', name: 'Refined Pearl Choker', type: 'necklace', glyph: '📿' },
+                { id: 'ac-earrings', name: 'Ruby Drop Earrings', type: 'earrings', glyph: '💎' },
+                { id: 'ac-bracelet', name: 'Gilded Chain Bangle', type: 'bracelet', glyph: '✨' },
+                { id: 'ac-bow', name: 'Chic Orchid Hair Bow', type: 'bow', glyph: '🎀' },
+                { id: 'ac-sunglasses', name: 'Retro Kitty Sunglasses', type: 'sunglasses', glyph: '🕶️' },
+                { id: 'ac-handbag', name: 'Quilted Premium Handbag', type: 'handbag', glyph: '👜' }
+            ],
+            lipstick: [
+                { id: 'lp-none', name: 'Natural Lips', color: '#ff6ea7' },
+                { id: 'lp-classic', name: 'Barbie Classic Pink', color: '#ff1493' },
+                { id: 'lp-ruby', name: 'Vibrant Crimson Ruby', color: '#cc0044' },
+                { id: 'lp-coral', name: 'Sunset Pastel Coral', color: '#ff7f50' },
+                { id: 'lp-plum', name: 'Royal Orchid Plum', color: '#8b008b' }
+            ],
+            eyeshadow: [
+                { id: 'es-none', name: 'Clear Profile', color: 'transparent' },
+                { id: 'es-pink', name: 'Blush Rose Glow', color: 'rgba(255,105,180,0.5)' },
+                { id: 'es-blue', name: 'Electric Spark Blue', color: 'rgba(0,191,255,0.4)' },
+                { id: 'es-purple', name: 'Stardust Amethyst', color: 'rgba(186,85,211,0.45)' },
+                { id: 'es-gold', name: 'Gilded Luxury Bronze', color: 'rgba(218,165,32,0.4)' }
+            ],
+            blush: [
+                { id: 'bl-none', name: 'No Blush Accent', color: 'transparent' },
+                { id: 'bl-soft', name: 'Soft Peach Kiss', color: 'rgba(255,182,193,0.6)' },
+                { id: 'bl-vibrant', name: 'Radiant Rose Quartz', color: 'rgba(255,20,147,0.4)' },
+                { id: 'bl-bronze', name: 'Sun-Kissed Amber', color: 'rgba(210,105,30,0.35)' }
+            ],
+            cosmeticAcc: [
+                { id: 'ca-none', name: 'No Facial Art', class: '', glyph: '' },
+                { id: 'ca-star', name: 'Cheek Star Decal', class: 'star-decal', glyph: '⭐' },
+                { id: 'ca-heart', name: 'Cheek Heart Tattoo', class: 'heart-decal', glyph: '💖' },
+                { id: 'ca-glitter', name: 'Fairy Dust Crystals', class: 'glitter-decal', glyph: '✨' }
+            ]
+        },
+
+        State: {
+            player: 'Stylist',
+            doll: 'Barbie',
+            currentWorkflowSlot: null,
+            dressingSlots: new Array(33).fill(null),
+            makeupSaves: [],
+            finalSaves: [],
+            activeOutfit: { dresses: 'dr-none', tops: 'tp-none', skirts: 'sk-none', hair: 'hr-blonde', shoes: 'sh-none', accessories: [] },
+            activeMakeup: { lipstick: 'lp-none', eyeshadow: 'es-none', blush: 'bl-none', cosmeticAcc: 'ca-none' }
+        },
+
+        Persistence: {
+            save() {
+                localStorage.setItem('barbie_studio_save_v2', JSON.stringify(GameApp.State));
+            },
+            load() {
+                const stored = localStorage.getItem('barbie_studio_save_v2');
+                if (stored) {
+                    try {
+                        const parsing = JSON.parse(stored);
+                        if (parsing.dressingSlots) GameApp.State.dressingSlots = parsing.dressingSlots;
+                        if (parsing.makeupSaves) GameApp.State.makeupSaves = parsing.makeupSaves;
+                        if (parsing.finalSaves) GameApp.State.finalSaves = parsing.finalSaves;
+                        if (parsing.player) GameApp.State.player = parsing.player;
+                        if (parsing.doll) GameApp.State.doll = parsing.doll;
+                    } catch(e) { console.error("Corrupted state variables reset", e); }
+                }
+            }
+        },
+
+        Engine: {
+            init() {
+                GameApp.Persistence.load();
+                GameApp.UI.setupListeners();
+                
+                if (!localStorage.getItem('barbie_studio_save_v2')) {
+                    GameApp.UI.switchScreen('scr-onboarding');
+                } else {
+                    GameApp.UI.updateGlobalLabels();
+                    GameApp.UI.switchScreen('scr-home');
+                }
+            }
+        },
+
+        UI: {
+            switchScreen(screenId) {
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                const targeted = document.getElementById(screenId);
+                if (targeted) targeted.classList.add('active');
+            },
+
+            updateGlobalLabels() {
+                document.getElementById('lbl-home-title').innerText = `${GameApp.State.doll || 'Barbie'} Studio`;
+                document.getElementById('lbl-home-sub').innerText = `STYLIST: ${GameApp.State.player || 'Stylist'}`;
+            },
+
+            setupListeners() {
+                // Onboarding Submission Event
+                document.getElementById('btn-submit-onboard').onclick = () => {
+                    const pl = document.getElementById('onboard-player').value.trim();
+                    const dl = document.getElementById('onboard-doll').value.trim();
+                    if (pl) GameApp.State.player = pl;
+                    if (dl) GameApp.State.doll = dl;
+                    GameApp.Persistence.save();
+                    GameApp.UI.updateGlobalLabels();
+                    GameApp.UI.switchScreen('scr-home');
+                };
+
+                // Routing Controls
+                document.getElementById('btn-route-dress').onclick = () => {
+                    GameApp.UI.buildInventoryLayoutSlots();
+                    GameApp.UI.switchScreen('scr-inventory-manager');
+                };
+
+                document.getElementById('btn-route-makeup').onclick = () => {
+                    GameApp.UI.buildPreloadRowsLayout();
+                    GameApp.UI.switchScreen('scr-makeup-preload');
+                };
+
+                document.getElementById('btn-route-collection').onclick = () => {
+                    GameApp.UI.buildGalleryPortfolioSections();
+                    GameApp.UI.switchScreen('scr-collection-vault');
+                };
+
+                document.getElementById('btn-back-from-dress').onclick = () => {
+                    GameApp.UI.switchScreen('scr-inventory-manager');
+                };
+
+                document.getElementById('btn-back-from-makeup').onclick = () => {
+                    GameApp.UI.switchScreen('scr-makeup-preload');
+                };
+
+                // Configuration Properties Overlay Actions
+                document.getElementById('btn-open-settings').onclick = () => {
+                    document.getElementById('txt-settings-player').value = GameApp.State.player;
+                    document.getElementById('txt-settings-doll').value = GameApp.State.doll;
+                    document.getElementById('mdl-settings-panel').classList.add('active');
+                };
+
+                document.getElementById('btn-close-settings-modal').onclick = () => {
+                    document.getElementById('mdl-settings-panel').classList.remove('active');
+                };
+
+                document.getElementById('btn-settings-apply').onclick = () => {
+                    GameApp.State.player = document.getElementById('txt-settings-player').value.trim() || 'Stylist';
+                    GameApp.State.doll = document.getElementById('txt-settings-doll').value.trim() || 'Barbie';
+                    GameApp.Persistence.save();
+                    GameApp.UI.updateGlobalLabels();
+                    document.getElementById('mdl-settings-panel').classList.remove('active');
+                };
+
+                document.getElementById('btn-settings-factory-wipe').onclick = () => {
+                    if (confirm("Reset all locally indexed application states? All custom look traces will be dropped.")) {
+                        localStorage.removeItem('barbie_studio_save_v2');
+                        location.reload();
+                    }
+                };
+
+                document.querySelectorAll('.go-home').forEach(btn => {
+                    btn.onclick = () => GameApp.UI.switchScreen('scr-home');
+                });
+
+                // Tab Event Binding Loop Assemblies
+                document.querySelectorAll('#tabs-dress-drawer .drawer-tab').forEach(tab => {
+                    tab.onclick = function() {
+                        document.querySelectorAll('#tabs-dress-drawer .drawer-tab').forEach(t => t.classList.remove('active'));
+                        this.classList.add('active');
+                        GameApp.UI.renderDrawerAssets('dress', this.getAttribute('data-cat'));
+                    };
+                });
+
+                document.querySelectorAll('#tabs-makeup-drawer .drawer-tab').forEach(tab => {
+                    tab.onclick = function() {
+                        document.querySelectorAll('#tabs-makeup-drawer .drawer-tab').forEach(t => t.classList.remove('active'));
+                        this.classList.add('active');
+                        GameApp.UI.renderDrawerAssets('makeup', this.getAttribute('data-cat'));
+                    };
+                });
+
+                document.querySelectorAll('.vault-tab-item').forEach(tab => {
+                    tab.onclick = function() {
+                        document.querySelectorAll('.vault-tab-item').forEach(t => t.classList.remove('active'));
+                        document.querySelectorAll('.vault-scrollable-body .vault-gallery-pane').forEach(p => p.classList.remove('active'));
+                        this.classList.add('active');
+                        document.getElementById(this.getAttribute('data-pane')).classList.add('active');
+                    };
+                });
+
+                // Dressing Room Modal Trigger Button Binding
+                document.getElementById('btn-save-outfit-workflow').onclick = () => {
+                    document.getElementById('lbl-naming-dialog-title').innerText = "Register Outfit Design";
+                    const currentSlot = GameApp.State.dressingSlots[GameApp.State.currentWorkflowSlot];
+                    document.getElementById('txt-dialog-save-name').value = currentSlot ? currentSlot.slotTitle : `Look Model ${GameApp.State.currentWorkflowSlot + 1}`;
+                    document.getElementById('mdl-naming-dialog').setAttribute('data-target-mode', 'dress');
+                    document.getElementById('mdl-naming-dialog').classList.add('active');
+                };
+
+                // Makeup Lounge Completion Route Interceptor Action
+                document.getElementById('btn-save-makeup-workflow').onclick = () => {
+                    document.getElementById('mdl-makeup-routing').classList.add('active');
+                };
+
+                document.getElementById('btn-close-makeup-routing').onclick = () => {
+                    document.getElementById('mdl-makeup-routing').classList.remove('active');
+                };
+
+                document.getElementById('btn-cancel-naming-modal').onclick = () => {
+                    document.getElementById('mdl-naming-dialog').classList.remove('active');
+                };
+
+                // Makeup Output Category Routers Action
+                document.getElementById('btn-save-target-makeup').onclick = () => {
+                    document.getElementById('mdl-makeup-routing').classList.remove('active');
+                    document.getElementById('lbl-naming-dialog-title').innerText = "Register Glam Configuration";
+                    document.getElementById('txt-dialog-save-name').value = "Glam Look Profile";
+                    document.getElementById('mdl-naming-dialog').setAttribute('data-target-mode', 'makeup-only');
+                    document.getElementById('mdl-naming-dialog').classList.add('active');
+                };
+
+                document.getElementById('btn-save-target-both').onclick = () => {
+                    document.getElementById('mdl-makeup-routing').classList.remove('active');
+                    document.getElementById('lbl-naming-dialog-title').innerText = "Register Portfolio Masterpiece";
+                    document.getElementById('txt-dialog-save-name').value = `${GameApp.State.doll}'s Masterpiece`;
+                    document.getElementById('mdl-naming-dialog').setAttribute('data-target-mode', 'makeup-both');
+                    document.getElementById('mdl-naming-dialog').classList.add('active');
+                };
+
+                // Master Commit Action Hook
+                document.getElementById('btn-confirm-save-action').onclick = () => {
+                    const saveName = document.getElementById('txt-dialog-save-name').value.trim() || "Unnamed Model Trace";
+                    const saveMode = document.getElementById('mdl-naming-dialog').getAttribute('data-target-mode');
+                    const stringifiedDate = new Date().toLocaleDateString(undefined, {month: 'short', day: 'numeric'});
+
+                    if (saveMode === 'dress') {
+                        GameApp.State.dressingSlots[GameApp.State.currentWorkflowSlot] = {
+                            slotTitle: saveName,
+                            slotMeta: stringifiedDate,
+                            rawSelectionCoordinatesMap: Object.assign({}, GameApp.State.activeOutfit)
+                        };
+                        GameApp.Persistence.save();
+                        GameApp.UI.buildInventoryLayoutSlots();
+                        GameApp.UI.switchScreen('scr-inventory-manager');
+                    } 
+                    else if (saveMode === 'makeup-only' || saveMode === 'makeup-both') {
+                        const lookPayload = {
+                            slotTitle: saveName,
+                            slotMeta: stringifiedDate,
+                            parentOutfitContext: Object.assign({}, GameApp.State.activeOutfit),
+                            rawSelectionCoordinatesMap: Object.assign({}, GameApp.State.activeMakeup)
+                        };
+
+                        if (saveMode === 'makeup-only') {
+                            GameApp.State.makeupSaves.push(lookPayload);
+                        } else {
+                            GameApp.State.finalSaves.push(lookPayload);
+                        }
+                        
+                        GameApp.Persistence.save();
+                        GameApp.UI.switchScreen('scr-home');
+                    }
+
+                    document.getElementById('mdl-naming-dialog').classList.remove('active');
+                };
+            },
+
+            buildInventoryLayoutSlots() {
+                const container = document.getElementById('container-inventory-slots');
+                container.innerHTML = '';
+                
+                GameApp.State.dressingSlots.forEach((slot, idx) => {
+                    const node = document.createElement('div');
+                    node.className = `inventory-layout-slot ${slot ? 'occupied' : ''}`;
+                    
+                    if (slot) {
+                        node.innerHTML = `
+                            <div class="slot-thumbnail-wrapper">
+                                <div class="micro-avatar-view">
+                                    <div class="layer-hair-back" style="background:${GameApp.Assets.hair.find(h=>h.id===slot.rawSelectionCoordinatesMap.hair)?.back || '#f5d042'}"></div>
+                                    <div class="doll-body" style="top:55px; height:120px; width:40px;"></div>
+                                    <div class="layer-apparel" style="background:${GameApp.Assets.dresses.find(d=>d.id===slot.rawSelectionCoordinatesMap.dresses)?.color || 'transparent'}; border-radius:${GameApp.Assets.dresses.find(d=>d.id===slot.rawSelectionCoordinatesMap.dresses)?.border || '0'}; top:65px; width:52px; height:80px;"></div>
+                                </div>
+                            </div>
+                            <div class="slot-title-label">${slot.slotTitle}</div>
+                            <div class="slot-status-label">${slot.slotMeta}</div>
+                        `;
+                    } else {
+                        node.innerHTML = `
+                            <div style="font-size:24px; color:#cdaebc;">＋</div>
+                            <div class="slot-title-label" style="color:#b594a5;">Empty Slot</div>
+                            <div class="slot-status-label" style="color:#d4bdc9;">Allocation ${idx + 1}</div>
+                        `;
+                    }
+
+                    node.onclick = () => {
+                        GameApp.State.currentWorkflowSlot = idx;
+                        if (slot) {
+                            GameApp.State.activeOutfit = Object.assign({}, slot.rawSelectionCoordinatesMap);
+                        } else {
+                            GameApp.State.activeOutfit = { dresses: 'dr-none', tops: 'tp-none', skirts: 'sk-none', hair: 'hr-blonde', shoes: 'sh-none', accessories: [] };
+                        }
+                        
+                        document.getElementById('lbl-dress-header-title').innerText = `Slot Design ${idx + 1}`;
+                        GameApp.UI.switchScreen('scr-dressing-studio');
+                        
+                        document.querySelectorAll('#tabs-dress-drawer .drawer-tab').forEach(t => t.classList.remove('active'));
+                        document.querySelector('#tabs-dress-drawer .drawer-tab[data-cat="dresses"]').classList.add('active');
+                        
+                        GameApp.UI.renderDrawerAssets('dress', 'dresses');
+                        GameApp.UI.updateVisualDollOutputLayers('dress');
+                    };
+
+                    container.appendChild(node);
+                });
+            },
+
+            buildPreloadRowsLayout() {
+                const container = document.getElementById('container-makeup-loadable-rows');
+                container.innerHTML = '';
+                
+                let loadableCount = 0;
+                GameApp.State.dressingSlots.forEach((slot, idx) => {
+                    if (!slot) return;
+                    loadableCount++;
+                    
+                    const row = document.createElement('div');
+                    row.className = 'list-selection-row';
+                    row.innerHTML = `
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <span style="font-size:20px;">👗</span>
+                            <div>
+                                <h4 style="font-size:13px; color:var(--dark-text); font-weight:600;">${slot.slotTitle}</h4>
+                                <p style="font-size:10px; color:var(--rose-gold);">Indexed Allocation Trace #${idx + 1}</p>
+                            </div>
+                        </div>
+                        <button class="btn-secondary" style="padding:6px 14px; font-size:10px;">Load Frame</button>
+                    `;
+
+                    row.onclick = () => {
+                        GameApp.State.activeOutfit = Object.assign({}, slot.rawSelectionCoordinatesMap);
+                        GameApp.State.activeMakeup = { lipstick: 'lp-none', eyeshadow: 'es-none', blush: 'bl-none', cosmeticAcc: 'ca-none' };
+                        
+                        document.getElementById('lbl-makeup-header-title').innerText = "Makeup Lounge";
+                        GameApp.UI.switchScreen('scr-makeup-studio');
+                        
+                        document.querySelectorAll('#tabs-makeup-drawer .drawer-tab').forEach(t => t.classList.remove('active'));
+                        document.querySelector('#tabs-makeup-drawer .drawer-tab[data-cat="lipstick"]').classList.add('active');
+                        
+                        GameApp.UI.renderDrawerAssets('makeup', 'lipstick');
+                        GameApp.UI.updateVisualDollOutputLayers('makeup');
+                    };
+
+                    container.appendChild(row);
+                });
+
+                if (loadableCount === 0) {
+                    container.innerHTML = `
+                        <div style="text-align:center; padding:60px 20px; color:var(--rose-gold); font-size:13px;">
+                            <span style="font-size:36px; display:block; margin-bottom:10px;">🔒</span>
+                            No models found. Create and save a styling outfit within **Dressing Mode** before configuring cosmetics layers.
+                        </div>
+                    `;
+                }
+            },
+
+            renderDrawerAssets(mode, category) {
+                const container = mode === 'dress' ? document.getElementById('content-dress-drawer') : document.getElementById('content-makeup-drawer');
+                container.innerHTML = '';
+                
+                const assetPool = GameApp.Assets[category] || [];
+                
+                assetPool.forEach(asset => {
+                    const card = document.createElement('div');
+                    card.className = 'item-node-card';
+                    
+                    let isSelected = false;
+                    if (mode === 'dress') {
+                        if (category === 'accessories') {
+                            isSelected = GameApp.State.activeOutfit.accessories.includes(asset.id);
+                        } else {
+                            isSelected = GameApp.State.activeOutfit[category] === asset.id;
+                        }
+                    } else {
+                        isSelected = GameApp.State.activeMakeup[category] === asset.id;
+                    }
+
+                    if (isSelected) card.classList.add('selected');
+                    
+                    let thumbnailDom = '';
+                    if (category === 'hair') {
+                        thumbnailDom = `<div class="item-node-thumb" style="background:${asset.front}; border-radius:50%; width:32px; height:32px;"></div>`;
+                    } else if (category === 'accessories' || category === 'cosmeticAcc') {
+                        thumbnailDom = `<div class="item-node-thumb">${asset.glyph || '❌'}</div>`;
+                    } else {
+                        thumbnailDom = `<div class="item-node-thumb" style="background:${asset.color || '#ffb6c1'}; border:1px solid #ebd3de;"></div>`;
+                    }
+
+                    card.innerHTML = `
+                        ${thumbnailDom}
+                        <span>${asset.name}</span>
+                    `;
+
+                    card.onclick = () => {
+                        if (mode === 'dress') {
+                            if (category === 'accessories') {
+                                if (asset.id === 'ac-none') {
+                                    GameApp.State.activeOutfit.accessories = [];
+                                } else {
+                                    const arrayIndex = GameApp.State.activeOutfit.accessories.indexOf(asset.id);
+                                    if (arrayIndex > -1) {
+                                        GameApp.State.activeOutfit.accessories.splice(arrayIndex, 1);
+                                    } else {
+                                        GameApp.State.activeOutfit.accessories.push(asset.id);
+                                    }
+                                }
+                            } else {
+                                GameApp.State.activeOutfit[category] = asset.id;
+                            }
+                        } else {
+                            GameApp.State.activeMakeup[category] = asset.id;
+                        }
+
+                        GameApp.UI.renderDrawerAssets(mode, category);
+                        GameApp.UI.updateVisualDollOutputLayers(mode);
+                    };
+
+                    container.appendChild(card);
+                });
+            },
+
+            updateVisualDollOutputLayers(mode) {
+                const prefix = mode === 'dress' ? 'dr-' : 'mk-';
+                const outfitSource = GameApp.State.activeOutfit;
+                
+                // Render Apparel Layers
+                const selectedDress = GameApp.Assets.dresses.find(d => d.id === outfitSource.dresses);
+                const apparelNode = document.getElementById(`${prefix}layer-apparel`);
+                
+                if (selectedDress && selectedDress.id !== 'dr-none') {
+                    apparelNode.style.background = selectedDress.color;
+                    apparelNode.style.borderRadius = selectedDress.border;
+                    document.getElementById(`${prefix}layer-shoe-l`).style.background = 'transparent';
+                    document.getElementById(`${prefix}layer-shoe-r`).style.background = 'transparent';
+                } else {
+                    const selectedTop = GameApp.Assets.tops.find(t => t.id === outfitSource.tops);
+                    const selectedSkirt = GameApp.Assets.skirts.find(s => s.id === outfitSource.skirts);
+                    
+                    apparelNode.style.borderRadius = '0';
+                    if ((selectedTop && selectedTop.id !== 'tp-none') || (selectedSkirt && selectedSkirt.id !== 'sk-none')) {
+                        apparelNode.style.background = `linear-gradient(to bottom, ${selectedTop?.color || 'transparent'} 0%, ${selectedTop?.color || 'transparent'} 45%, ${selectedSkirt?.color || 'transparent'} 46%, ${selectedSkirt?.color || 'transparent'} 100%)`;
+                    } else {
+                        apparelNode.style.background = 'transparent';
+                    }
+                }
+
+                // Render Hair Profiles
+                const selectedHair = GameApp.Assets.hair.find(h => h.id === outfitSource.hair);
+                if (selectedHair) {
+                    document.getElementById(`${prefix}layer-hair-back`).style.background = selectedHair.back;
+                    document.getElementById(`${prefix}layer-hair-front`).style.background = selectedHair.front;
+                }
+
+                // Render Shoe Base Accents
+                const selectedShoes = GameApp.Assets.shoes.find(s => s.id === outfitSource.shoes);
+                if (selectedShoes && selectedDress?.id === 'dr-none') {
+                    document.getElementById(`${prefix}layer-shoe-l`).style.background = selectedShoes.color;
+                    document.getElementById(`${prefix}layer-shoe-r`).style.background = selectedShoes.color;
+                }
+
+                // Empty Accessory Buckets
+                const accessoryElements = ['tiara', 'necklace', 'earrings', 'bracelet', 'bow', 'sunglasses', 'handbag'];
+                accessoryElements.forEach(acc => {
+                    const el = document.getElementById(`${prefix}layer-acc-${acc}`);
+                    if (el) el.innerHTML = '';
+                });
+
+                // Apply Accessory Badges
+                outfitSource.accessories.forEach(accId => {
+                    const matchingAsset = GameApp.Assets.accessories.find(a => a.id === accId);
+                    if (!matchingAsset) return;
+                    
+                    const targetedContainer = document.getElementById(`${prefix}layer-acc-${matchingAsset.type}`);
+                    if (targetedContainer) {
+                        if (matchingAsset.type === 'earrings') {
+                            targetedContainer.innerHTML = `<span>${matchingAsset.glyph}</span><span>${matchingAsset.glyph}</span>`;
+                        } else {
+                            targetedContainer.innerText = matchingAsset.glyph;
+                        }
+                    }
+                });
+
+                // Cosmetics Profiles Layer Logic
+                if (mode === 'makeup') {
+                    const makeupSource = GameApp.State.activeMakeup;
+                    
+                    const lipAsset = GameApp.Assets.lipstick.find(l => l.id === makeupSource.lipstick);
+                    document.getElementById('mk-layer-lips').style.background = lipAsset ? lipAsset.color : '#ff6ea7';
+                    
+                    const shadowAsset = GameApp.Assets.eyeshadow.find(e => e.id === makeupSource.eyeshadow);
+                    document.getElementById('mk-sh-l').style.background = shadowAsset ? shadowAsset.color : 'transparent';
+                    document.getElementById('mk-sh-r').style.background = shadowAsset ? shadowAsset.color : 'transparent';
+                    
+                    const blushAsset = GameApp.Assets.blush.find(b => b.id === makeupSource.blush);
+                    document.getElementById('mk-bl-l').style.background = blushAsset ? blushAsset.color : 'transparent';
+                    document.getElementById('mk-bl-r').style.background = blushAsset ? blushAsset.color : 'transparent';
+                }
+            },
+
+            buildGalleryPortfolioSections() {
+                GameApp.UI.populateIndividualPane('pane-dressing', 'dress');
+                GameApp.UI.populateIndividualPane('pane-makeup', 'makeup');
+                GameApp.UI.populateIndividualPane('pane-final', 'final');
+            },
+
+            populateIndividualPane(paneId, type) {
+                const pane = document.getElementById(paneId);
+                pane.innerHTML = '';
+                
+                let sourceArray = [];
+                if (type === 'dress') {
+                    sourceArray = GameApp.State.dressingSlots.filter(s => s !== null);
+                } else if (type === 'makeup') {
+                    sourceArray = GameApp.State.makeupSaves;
+                } else if (type === 'final') {
+                    sourceArray = GameApp.State.finalSaves;
+                }
+
+                if (sourceArray.length === 0) {
+                    pane.innerHTML = `
+                        <div class="empty-gallery-block">
+                            <icon>🖼️</icon>
+                            <h3>Gallery Block Vacant</h3>
+                            <p>No designs saved in this category look portfolio yet.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                sourceArray.forEach((look, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'gallery-display-card';
+                    
+                    const outfitContext = type === 'dress' ? look.rawSelectionCoordinatesMap : look.parentOutfitContext;
+                    
+                    card.innerHTML = `
+                        <div class="gallery-card-preview">
+                            <div class="micro-avatar-view">
+                                <div class="layer-hair-back" style="background:${GameApp.Assets.hair.find(h=>h.id===outfitContext?.hair)?.back || '#f5d042'}"></div>
+                                <div class="doll-body" style="top:55px; height:120px; width:40px;"></div>
+                                <div class="layer-apparel" style="background:${GameApp.Assets.dresses.find(d=>d.id===outfitContext?.dresses)?.color || 'transparent'}; border-radius:${GameApp.Assets.dresses.find(d=>d.id===outfitContext?.dresses)?.border || '0'}; top:65px; width:52px; height:80px;"></div>
+                            </div>
+                        </div>
+                        <div class="gallery-card-title">${look.slotTitle}</div>
+                        <div class="gallery-card-meta">Saved: ${look.slotMeta}</div>
+                        <div class="gallery-card-actions">
+                            <button class="gallery-btn-action load-trigger">Load</button>
+                            <button class="gallery-btn-action delete-trigger btn-destructive" style="color:#d6244e;">Drop</button>
+                        </div>
+                    `;
+
+                    card.querySelector('.load-trigger').onclick = () => {
+                        if (type === 'dress') {
+                            GameApp.State.currentWorkflowSlot = GameApp.State.dressingSlots.indexOf(look);
+                            GameApp.State.activeOutfit = Object.assign({}, look.rawSelectionCoordinatesMap);
+                            GameApp.UI.switchScreen('scr-dressing-studio');
+                            GameApp.UI.renderDrawerAssets('dress', 'dresses');
+                            GameApp.UI.updateVisualDollOutputLayers('dress');
+                        } else {
+                            GameApp.State.activeOutfit = Object.assign({}, look.parentOutfitContext);
+                            GameApp.State.activeMakeup = Object.assign({}, look.rawSelectionCoordinatesMap);
+                            
+                            GameApp.UI.switchScreen('scr-makeup-studio');
+                            document.querySelectorAll('#tabs-makeup-drawer .drawer-tab').forEach(t => t.classList.remove('active'));
+                            document.querySelector('#tabs-makeup-drawer .drawer-tab[data-cat="lipstick"]').classList.add('active');
+                            
+                            GameApp.UI.renderDrawerAssets('makeup', 'lipstick');
+                            GameApp.UI.updateVisualDollOutputLayers('makeup');
+                        }
+                    };
+
+                    card.querySelector('.delete-trigger').onclick = () => {
+                        GameApp.UI.executePermanentDeletion(type, index);
+                    };
+
+                    pane.appendChild(card);
+                });
+            },
+
+            executePermanentDeletion(type, index) {
+                if (!confirm("Are you sure you want to drop this look trace profile?")) return;
+
+                if (type === 'dress') {
+                    const activeSlots = GameApp.State.dressingSlots.filter(s => s !== null);
+                    const absoluteIndex = GameApp.State.dressingSlots.indexOf(activeSlots[index]);
+                    if (absoluteIndex > -1) GameApp.State.dressingSlots[absoluteIndex] = null;
+                } else if (type === 'makeup') {
+                    GameApp.State.makeupSaves.splice(index, 1);
+                } else if (type === 'final') {
+                    GameApp.State.finalSaves.splice(index, 1);
+                }
+
+                GameApp.Persistence.save();
+                GameApp.UI.buildGalleryPortfolioSections();
+            }
+        }
+    };
+
+    // Instantiate Runtime Lifecycle execution context
+    window.onload = () => GameApp.Engine.init();
+</script>
+
+</body>
+</html>
